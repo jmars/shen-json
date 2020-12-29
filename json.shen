@@ -9,6 +9,20 @@
 (define file->chars
   Name -> (let Stream (open Name in) (read-all-chars Stream)))
 
+(define collect-string
+  [34 | Rest] -> [34 | (remove-spaces Rest)]
+  [C | Rest]  -> [C | (collect-string Rest)])
+
+(define remove-spaces
+  []          -> []
+  [32 | Rest] -> (remove-spaces Rest)
+  [10 | Rest] -> (remove-spaces Rest)
+  [34 | Rest] -> [34 | (collect-string Rest)]
+  [C | Rest]  -> [C | (remove-spaces Rest)])
+
+(define parse-file
+  Name -> (compile (function <value>) (remove-spaces (file->chars Name))))
+
 (defcc <char>
   Char := Char;)
 
